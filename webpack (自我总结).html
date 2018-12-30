@@ -1,0 +1,196 @@
+<!DOCTYPE html><html><head><title>webpack (自我总结)</title><meta charset='utf-8'><link href='https://cdn.maxiang.io/res-min/themes/marxico.css' rel='stylesheet'><style>
+.note-content  {font-family: 'Helvetica Neue', Arial, 'Hiragino Sans GB', STHeiti, 'Microsoft YaHei', 'WenQuanYi Micro Hei', SimSun, Song, sans-serif;}
+
+</style></head><body><div id='preview-contents' class='note-content'>
+                        
+                    
+
+
+
+<h1 id="webpack-自我总结">webpack (自我总结)</h1>
+
+
+
+<h3 id="webpack的概念特征">webpack的概念、特征</h3>
+
+<p><strong>webpack  是一个模块打包器</strong> <br>
+在新建的一个总文件夹中，将同一类的文件放在一个文件夹下。 各个模块明显。</p>
+
+<blockquote>
+  <p>在webpack中会用到ES6模块的引入和输出： <br>
+  import { fn } from ‘xx.js’  ： 引入模块 <br>
+  export function fn ( ) { }    ：在xx.js中导出模块。有三种输出方式</p>
+  
+  <ul><li><p>export var m = 10;</p></li>
+  <li><p>var m = 10; <br>
+  export { m }    // 用花括号包裹变量名</p></li>
+  <li><p>var n = 10; <br>
+  export { n as m }    // as代表后面的名称替换掉前面的变量名。</p></li>
+  </ul>
+</blockquote>
+
+<p><strong>特征、优点</strong></p>
+
+<ul><li><p>代码转换：把ts编译成js， 把scss编译成css</p></li>
+<li><p>文件优化：压缩js、css、html代码，压缩图片等。</p></li>
+<li><p>代码分割：提取多个页面的公共代码，提取首屏不需要的执行部分的代码让其异步加载（延迟加载、懒加载）</p></li>
+<li><p>模块合并：在采取模块化的项目里会有很多歌模块和文件，需要构建功能把模块分类合并成一个文件。</p></li>
+<li><p>自动刷新：监听本地源代码的变化。自动重新构建、刷新浏览器。（更改代码后、重新打开浏览器后不用刷新、自动更改成修改后的内容）</p></li>
+</ul>
+
+<p><strong>快速上手配置webpack：<a href="https://www.cnblogs.com/doudoujun/p/6405534.html" target="_blank">https://www.cnblogs.com/doudoujun/p/6405534.html</a></strong></p>
+
+<p>webpack的重点大致在：入口、出口、模块、插件这几部分。</p>
+
+<p><strong>开发环境  ：mode：development</strong>  <br>
+<strong>开发环境：运行  npm run build     (暂不会打包)</strong> <br>
+安装包的时候，使用npm  i  xx  -D <br>
+安装完成之后会在package.json 中的devDependencies中。 <br>
+使用一些构建工具比如 giuo、webpack这些只是在开发中使用的包，上线以后就和他们没关系了，多以将它写入DevDependencies中。</p>
+
+<p><strong>生产环境：mode：production</strong> <br>
+<strong>运行：npm run dev    （打包成build，里面为成品，可以直接用）</strong> <br>
+安装包的时候使用 npm i xx  -S <br>
+安装完成之后会在package.json 中的devDependencies中。 <br>
+比如我们写一个项目要依赖JQuery，没有这个包的依赖运行就会报错，这个时候就把这个依赖写入dependencies</p>
+
+<p>卸载插件：npm uninstall xxx</p>
+
+
+
+<h3 id="webpack-的各种插件插件不全暂列两个">webpack  的各种插件（插件不全、暂列两个）：</h3>
+
+<p><strong>html-webpack-plugin：根据模板生成HTML文件并进行一系列操作</strong></p>
+
+<ul><li><p><strong>template: </strong>模板名</p></li>
+<li><p><strong>minify：</strong>进行的操作</p>
+
+<ul>
+<li><p><strong>removeAttributeQuotea:true, </strong>  -&gt;   去掉属性的引号</p></li>
+<li><p><strong>collapseWhitespace:true, </strong> -&gt;   html文件 压缩成一行。 </p></li></ul></li>
+<li><p><strong>hash:true,</strong>   -&gt;  html 文件后的哈希值</p></li>
+<li><p><strong>chunks:[‘index’, ‘index2’], </strong>  -&gt; 引入指定的生成模块  模块名为生成后的文件名</p></li>
+<li><p><strong>title:</strong> ‘学好前段，浏览器不死就有饭吃~！’  -&gt; 设置的是html的标头，但是需要在html的模板文件中这个位置写上相应的内容。</p></li>
+</ul>
+
+<p><strong>clean-webpack-plugin:  它是一个清除多余js文件的插件，必须放在plugins:里面而且要放在html文件之前。</strong></p>
+
+<ul><li><p>先引入<strong>const CWP = require（’clean-webpack-plugin’）</strong></p></li>
+<li><p><strong>new CWP([‘build’])</strong>,    // 清除多余的js文件，必须放在html上面</p></li>
+</ul>
+
+<h3 id="webpack-的配置过程">webpack 的配置过程：</h3>
+
+<ul><li><p>1、在控制台中出入：npm init -y</p></li>
+<li><p>2、npm i</p></li>
+<li><p>3、npm i webpack webpack-cli -D   这一步是安装webpack ，安装好后会在文件中出现package.json  然后打开这个文件找到：</p></li>
+</ul>
+
+
+
+<pre class="prettyprint hljs-dark"><code class="hljs stata"><div class="hljs-line">scripts:{
+</div><div class="hljs-line">    <span class="hljs-string">"test"</span>:<span class="hljs-string">"echo\"</span> <span class="hljs-keyword">Error</span>:<span class="hljs-keyword">no</span> <span class="hljs-keyword">test</span> specified\ <span class="hljs-string">"&amp;&amp; exit 1"</span>,
+</div><div class="hljs-line">    <span class="hljs-string">"build"</span>: <span class="hljs-string">"webpack"</span>   <span class="hljs-comment">//这一行是自己添加的。代表运行生产环境。</span>
+</div><div class="hljs-line">    <span class="hljs-string">"dev"</span>: <span class="hljs-string">"webpack-dev-server"</span>  <span class="hljs-comment">// 这一行也是自己添的，代表运行开发环境。</span>
+</div><div class="hljs-line">}
+</div></code></pre>
+
+<ul><li><p>4、npm i express -S    —-&gt; 这是安装express框架</p></li>
+<li><p>5、假如我们这个项目中有很多的js文件，它们都是互相引用的关系。如果b文件中的某一个内容需要在a文件中使用，那么在这个b文件中需要输出一下：</p></li>
+</ul>
+
+
+
+<pre class="prettyprint hljs-dark"><code class="hljs javascript"><div class="hljs-line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>)</span>{}   <span class="hljs-comment">// 输出的方式一共有三种，看前面的知识；</span>
+</div></code></pre>
+
+<p>当b文件中有输出时，在a文件中还需要在引入一下才能使用，</p>
+
+
+
+<pre class="prettyprint hljs-dark"><code class="hljs clean"><div class="hljs-line"><span class="hljs-keyword">import</span>{fn} <span class="hljs-keyword">from</span> <span class="hljs-string">'./b'</span>    <span class="hljs-comment">// 中间花括号内的是引入的内容和B中输出的内容一致。后面是引入的路径。</span>
+</div></code></pre>
+
+<p>这样的话，各个文件是相互纠缠在一块的。</p>
+
+<ul><li><p>6、 <strong>新建一个webpack.config.js 。注意这个名字必须是这个。</strong>我认为这个文件是webpack的操作台。我们的很多操作都需要在这里面进行操作。</p></li>
+</ul>
+
+
+
+<pre class="prettyprint hljs-dark"><code class="hljs typescript"><div class="hljs-line"><span class="hljs-comment">//第十版： (参考F:\ZZZ\maaa 共有12版)</span>
+</div><div class="hljs-line"><wbr>
+</div><div class="hljs-line"><span class="hljs-comment">// 这一版是初级 插入图片。  能插入图片，但是图片不会自动生成需要手动去移动到引入文件中。</span>
+</div><div class="hljs-line"><wbr>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);    <span class="hljs-comment">// 所有输出文件的路径  -&gt;  接受输出的文件</span>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> HWP = <span class="hljs-built_in">require</span>(<span class="hljs-string">'html-webpack-plugin'</span>);  <span class="hljs-comment">// 处理html文件，根据模板生成新的文件</span>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> MCEP = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mini-css-extract-plugin'</span>);  <span class="hljs-comment">// 整合css文件并插入到html文件中</span>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> ocawp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'optimize-css-assets-webpack-plugin'</span>); <span class="hljs-comment">// 这个插件是压缩打包css的作用</span>
+</div><div class="hljs-line"><span class="hljs-comment">// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');</span>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> cwp = <span class="hljs-built_in">require</span>(<span class="hljs-string">'clean-webpack-plugin'</span>);    <span class="hljs-comment">// 这个文件是清楚多余文件的作用</span>
+</div><div class="hljs-line"><wbr>
+</div><div class="hljs-line"><span class="hljs-keyword">const</span> obj = {
+</div><div class="hljs-line">    mode:<span class="hljs-string">'production'</span>,  <span class="hljs-comment">// 设置模式</span>
+</div><div class="hljs-line">    entry:{ 
+</div><div class="hljs-line">        <span class="hljs-string">'app'</span>:<span class="hljs-string">'./c.js'</span>  <span class="hljs-comment">// 设置文件入口</span>
+</div><div class="hljs-line">    },
+</div><div class="hljs-line">    output:{
+</div><div class="hljs-line">        path:path.resolve(__dirname,<span class="hljs-string">'build/js'</span>),  <span class="hljs-comment">// 生成的文件路径</span>
+</div><div class="hljs-line">        filename:<span class="hljs-string">'[name].[hash:6].js'</span>,            <span class="hljs-comment">//生成的文件名称</span>
+</div><div class="hljs-line">        publicPath:<span class="hljs-string">'/'</span>
+</div><div class="hljs-line">    },
+</div><div class="hljs-line">    <span class="hljs-keyword">module</span>:{                                     <span class="hljs-comment">// module的作用是 里面的代码是形容 如何处理模块的。  </span>
+</div><div class="hljs-line">        rules:[                                  <span class="hljs-comment">// rules是module的一个属性，作用是指定模块解析规则，本质是一个数组。</span>
+</div><div class="hljs-line">            {
+</div><div class="hljs-line">                test:<span class="hljs-regexp">/\.css$/</span>,                  <span class="hljs-comment">// 匹配处理文件的扩展名的正则表达式。</span>
+</div><div class="hljs-line">                use:[                           <span class="hljs-comment">// 而use就是rules的一个属性,是指 指定要用什么loader。</span>
+</div><div class="hljs-line">                    {
+</div><div class="hljs-line">                        loader:MCEP.loader,  <span class="hljs-comment">// MCEP 是整合css文件然后插入生成的html文件中。</span>
+</div><div class="hljs-line">                    },                       <span class="hljs-comment">// 此处上下两行应该是 提取css文件中的内容，然后整合生成新的css文件并插入到新生成的html文件中。</span>
+</div><div class="hljs-line">                    <span class="hljs-string">'css-loader'</span>             <span class="hljs-comment">// 提取css文件中的内容</span>
+</div><div class="hljs-line">                ]
+</div><div class="hljs-line">            },
+</div><div class="hljs-line">            {
+</div><div class="hljs-line">                test:<span class="hljs-regexp">/\.(jpg|png|bmp|gif|svg|ttf|woff|woff2|eot)$/</span>, <span class="hljs-comment">// 匹配处理文件的扩展名的正则表达式。</span>
+</div><div class="hljs-line">                use:[
+</div><div class="hljs-line">                    {
+</div><div class="hljs-line">                        loader:<span class="hljs-string">'url-loader'</span>,   <span class="hljs-comment">//  </span>
+</div><div class="hljs-line">                        options:{
+</div><div class="hljs-line">                            limit:<span class="hljs-number">4096</span>,             <span class="hljs-comment">// 此处是限制图片的额大小。</span>
+</div><div class="hljs-line">                            outputPath:<span class="hljs-string">'../image'</span>,  <span class="hljs-comment">//  这是图片打包后的地址。  需要弄清是打包后存放的地址，还是打包后文件中引入的地址。</span>
+</div><div class="hljs-line">                            publicPath:<span class="hljs-string">'/'</span>          <span class="hljs-comment">//  这是图片之前的地址。</span>
+</div><div class="hljs-line">                        }
+</div><div class="hljs-line">                    }
+</div><div class="hljs-line">                ]
+</div><div class="hljs-line">            }
+</div><div class="hljs-line">        ]
+</div><div class="hljs-line">    },
+</div><div class="hljs-line">    plugins:[
+</div><div class="hljs-line">        <span class="hljs-keyword">new</span> ocawp({}),                             <span class="hljs-comment">// 压缩打包css文件</span>
+</div><div class="hljs-line">        <span class="hljs-keyword">new</span> HWP({
+</div><div class="hljs-line">            template:<span class="hljs-string">'./1.html'</span>,                   <span class="hljs-comment">// html文件的模板</span>
+</div><div class="hljs-line">            filename:<span class="hljs-string">'../index.html'</span>,              <span class="hljs-comment">// 生成的新的html文件的位置和名字</span>
+</div><div class="hljs-line">            minify:{
+</div><div class="hljs-line">                collapseWhitespace:<span class="hljs-literal">true</span>,          <span class="hljs-comment">// html文件压缩成一行</span>
+</div><div class="hljs-line">                removeAttributeQuotes:<span class="hljs-literal">true</span>,       <span class="hljs-comment">// 去掉文件中属性的引号。</span>
+</div><div class="hljs-line">            }
+</div><div class="hljs-line">        }),
+</div><div class="hljs-line">        <span class="hljs-keyword">new</span> cwp([<span class="hljs-string">'build'</span>]),                       <span class="hljs-comment">// 清除build中多余的文件。      </span>
+</div><div class="hljs-line">        <span class="hljs-keyword">new</span> MCEP({
+</div><div class="hljs-line">            filename:<span class="hljs-string">'../css/[name].css'</span>          <span class="hljs-comment">// 整合后生成的css文件存放的路径及名字</span>
+</div><div class="hljs-line">        })
+</div><div class="hljs-line">    ]
+</div><div class="hljs-line">};
+</div><div class="hljs-line"><wbr>
+</div><div class="hljs-line"><span class="hljs-built_in">module</span>.exports = obj;
+</div><div class="hljs-line"><wbr>
+</div></code></pre>
+
+<ul><li><p>7、跑一遍： npm run build </p></li>
+</ul>
+
+
+
+<h3 id="同学笔记">同学笔记</h3>
+
+<p><a href="https://note.youdao.com/share/?id=29ca2b155a2a5a155d3ee4e68ad26987&amp;type=note#/" target="_blank">https://note.youdao.com/share/?id=29ca2b155a2a5a155d3ee4e68ad26987&amp;type=note#/</a></p></div></body></html>
